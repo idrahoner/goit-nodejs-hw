@@ -1,5 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
+const shortid = require("shortid");
 
 const contactList = path.join(__dirname, "./contacts.json");
 
@@ -10,11 +11,6 @@ const writeToFile = async (body) => {
   } catch (error) {
     console.log(error);
   }
-};
-
-const generateId = (array) => {
-  const newId = Number(array[array.length - 1].id) + 1;
-  return String(newId);
 };
 
 const listContacts = async () => {
@@ -44,7 +40,7 @@ const removeContact = async (contactId) => {
     if (contactIndex === -1) throw new Error("Wrong contact id");
     contacts.splice(contactIndex, 1);
     await fs.writeFile(contactList, JSON.stringify(contacts, null, 2));
-    return contacts;
+    return "contact deleted";
   } catch (error) {
     console.log(error);
   }
@@ -53,9 +49,10 @@ const removeContact = async (contactId) => {
 const addContact = async (body) => {
   try {
     const contacts = await listContacts();
-    contacts.push({ id: generateId(contacts), ...body });
+    const newContact = { id: shortid.generate(), ...body };
+    contacts.push(newContact);
     await writeToFile(contacts);
-    return contacts;
+    return newContact;
   } catch (error) {
     console.log(error);
   }
@@ -66,27 +63,14 @@ const updateContact = async (contactId, body) => {
     const contacts = await listContacts();
     const contactIndex = contacts.findIndex(({ id }) => id === contactId);
     if (contactIndex === -1) throw new Error("Wrong contact id");
-    contacts.splice(contactIndex, 1, { id: contactId, ...body });
+    const newContact = { id: contactId, ...body };
+    contacts.splice(contactIndex, 1, newContact);
     await writeToFile(contacts);
-    return contacts;
+    return newContact;
   } catch (error) {
     console.log(error);
   }
 };
-
-// (async () => {
-//   try {
-//     const response = await updateContact("12", {
-//       name: "hello",
-//       email: "kitty",
-//       phone: "777-777",
-//     });
-//     // if (!response) throw new Error("Wrong file name");
-//     console.log("response: ", response);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// })();
 
 module.exports = {
   listContacts,
