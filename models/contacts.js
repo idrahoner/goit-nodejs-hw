@@ -1,4 +1,3 @@
-const { write } = require('fs');
 const fs = require('fs/promises');
 const path = require('path');
 const shortid = require('shortid');
