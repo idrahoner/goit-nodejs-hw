@@ -1,7 +1,7 @@
 const express = require("express");
 
-// const validateBody = require("../../middlewares/validation");
-// const validateSchema = require("../../utils/validation");
+const validateBody = require("../../middlewares/validation");
+const validateSchema = require("../../utils/validation");
 const contactsCtrl = require("../../controllers/contacts");
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.get("/", contactsCtrl.getAll);
 
 router.get("/:contactId", contactsCtrl.get);
 
-router.post("/", contactsCtrl.add);
+router.post("/", validateBody(validateSchema.schemaAdd), contactsCtrl.add);
 
 router.delete("/:contactId", contactsCtrl.remove);
 
