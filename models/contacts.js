@@ -1,16 +1,13 @@
-const fs = require("fs/promises");
-const path = require("path");
-const shortid = require("shortid");
+const { write } = require('fs');
+const fs = require('fs/promises');
+const path = require('path');
+const shortid = require('shortid');
 
-const contactList = path.join(__dirname, "./contacts.json");
+const contactList = path.join(__dirname, './contacts.json');
 
 const writeToFile = async (body) => {
-  try {
-    const preparedBody = JSON.stringify(body, null, 2);
-    await fs.writeFile(contactList, preparedBody);
-  } catch (error) {
-    console.log(error);
-  }
+  const preparedBody = JSON.stringify(body, null, 2);
+  await fs.writeFile(contactList, preparedBody);
 };
 
 const listContacts = async () => {
@@ -26,7 +23,7 @@ const getContactById = async (contactId) => {
   try {
     const contacts = await listContacts();
     const currentContact = contacts.find(({ id }) => id === contactId);
-    if (!currentContact) throw new Error("Wrong contact id");
+    if (!currentContact) throw new Error('Wrong contact id');
     return currentContact;
   } catch (error) {
     console.log(error);
@@ -37,10 +34,10 @@ const removeContact = async (contactId) => {
   try {
     const contacts = await listContacts();
     const contactIndex = contacts.findIndex(({ id }) => id === contactId);
-    if (contactIndex === -1) throw new Error("Wrong contact id");
+    if (contactIndex === -1) throw new Error('Wrong contact id');
     contacts.splice(contactIndex, 1);
-    await fs.writeFile(contactList, JSON.stringify(contacts, null, 2));
-    return "contact deleted";
+    await writeToFile(contacts);
+    return 'contact deleted';
   } catch (error) {
     console.log(error);
   }
@@ -62,7 +59,7 @@ const updateContact = async (contactId, body) => {
   try {
     const contacts = await listContacts();
     const contactIndex = contacts.findIndex(({ id }) => id === contactId);
-    if (contactIndex === -1) throw new Error("Wrong contact id");
+    if (contactIndex === -1) throw new Error('Wrong contact id');
     const newContact = { id: contactId, ...body };
     contacts.splice(contactIndex, 1, newContact);
     await writeToFile(contacts);

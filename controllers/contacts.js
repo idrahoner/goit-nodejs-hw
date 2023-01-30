@@ -1,55 +1,61 @@
-const contactsApi = require("../models/contacts");
+const contactsApi = require('../models/contacts');
+const checkResultSuccess = require('../utils/check-result-success');
 
 const getAll = async (req, res) => {
-  const contacts = await contactsApi.listContacts();
-  res.status(200).json(contacts);
+  try {
+    const contacts = await contactsApi.listContacts();
+    checkResultSuccess(contacts);
+    res.status(200).json(contacts);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'something went wrong, please try again later' });
+  }
 };
 
 const get = async (req, res) => {
-  const { contactId } = req.params;
-  const contact = await contactsApi.getContactById(contactId);
-  if (!contact) {
-    return res.status(404).json({ message: "not found" });
+  try {
+    const { contactId } = req.params;
+    const contact = await contactsApi.getContactById(contactId);
+    checkResultSuccess(contact);
+    res.status(200).json(contact);
+  } catch (error) {
+    res.status(404).json({ message: 'not found' });
   }
-  res.status(200).json(contact);
 };
 
 const add = async (req, res) => {
-  const { name, email, phone } = req.body;
-  if (!name || !email || !phone) {
-    return res.status(400).json({ message: "missing required name field" });
+  try {
+    const newContact = await contactsApi.addContact(req.body);
+    checkResultSuccess(newContact);
+    res.status(201).json(newContact);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'something went wrong, please try again later' });
   }
-
-  const newContact = await contactsApi.addContact({ name, email, phone });
-  res.status(201).json(newContact);
 };
 
 const remove = async (req, res) => {
-  const { contactId } = req.params;
-  const status = await contactsApi.removeContact(contactId);
-  if (!status) {
-    return res.status(404).json({ message: "Not found" });
+  try {
+    const { contactId } = req.params;
+    const status = await contactsApi.removeContact(contactId);
+    checkResultSuccess(status);
+    res.status(200).json({ message: 'contact deleted' });
+  } catch (error) {
+    res.status(404).json({ message: 'Not found' });
   }
-  res.status(200).json({ message: "contact deleted" });
 };
 
 const update = async (req, res) => {
-  const { name, email, phone } = req.body;
-  const { contactId } = req.params;
-
-  if (!name || !email || !phone) {
-    return res.status(400).json({ message: "missing fields" });
+  try {
+    const { contactId } = req.params;
+    const newContact = await contactsApi.updateContact(contactId, req.body);
+    checkResultSuccess(newContact);
+    res.status(200).json(newContact);
+  } catch (error) {
+    res.status(404).json({ message: 'Not found' });
   }
-
-  const newContact = await contactsApi.updateContact(contactId, {
-    name,
-    email,
-    phone,
-  });
-  if (!newContact) {
-    return res.status(404).json({ message: "Not found" });
-  }
-  res.status(200).json(newContact);
 };
 
 module.exports = {

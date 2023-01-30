@@ -25,9 +25,9 @@ const schemaAdd = Joi.object({
     .required()
     .messages({
       'any.required': 'missing required phone field',
-      'string.pattern.base': 'Phone number must be digits',
+      'string.pattern.base': 'phone number must be digits',
     }),
-});
+}).messages({ 'object.unknown': 'extra fields are present' });
 
 module.exports = {
   schemaAdd,
