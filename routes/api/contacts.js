@@ -20,7 +20,7 @@ router.delete('/:contactId', callController(contactsCtrl.remove));
 
 router.put(
   '/:contactId',
-  validateBody(validationSchema.add),
+  validateBody(validationSchema.update),
   contactsCtrl.update
 );
 

@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const shortid = require('shortid');
-const { generateError, errors } = require('../helpers');
+const { generateError, responseErrors } = require('../helpers');
 
 const contactList = path.join(__dirname, './contacts.json');
 
@@ -18,14 +18,14 @@ const listContacts = async () => {
 const getContactById = async (contactId) => {
   const contacts = await listContacts();
   const currentContact = contacts.find(({ id }) => id === contactId);
-  if (!currentContact) throw generateError(errors.notFound);
+  if (!currentContact) throw generateError(responseErrors.notFound);
   return currentContact;
 };
 
 const removeContact = async (contactId) => {
   const contacts = await listContacts();
   const contactIndex = contacts.findIndex(({ id }) => id === contactId);
-  if (contactIndex === -1) throw generateError(errors.notFound);
+  if (contactIndex === -1) throw generateError(responseErrors.notFound);
   contacts.splice(contactIndex, 1);
   await writeToFile(contacts);
   return 'contact deleted';
@@ -33,8 +33,7 @@ const removeContact = async (contactId) => {
 
 const addContact = async (body) => {
   const contacts = await listContacts();
-  const { name, email, phone } = body;
-  const newContact = { id: shortid.generate(), name, email, phone };
+  const newContact = { id: shortid.generate(), ...body };
   contacts.push(newContact);
   await writeToFile(contacts);
   return newContact;
@@ -43,9 +42,8 @@ const addContact = async (body) => {
 const updateContact = async (contactId, body) => {
   const contacts = await listContacts();
   const contactIndex = contacts.findIndex(({ id }) => id === contactId);
-  if (contactIndex === -1) throw generateError(errors.notFound);
-  const { name, email, phone } = body;
-  const newContact = { id: contactId, name, email, phone };
+  if (contactIndex === -1) throw generateError(responseErrors.notFound);
+  const newContact = { ...contacts[contactIndex], ...body };
   contacts.splice(contactIndex, 1, newContact);
   await writeToFile(contacts);
   return newContact;

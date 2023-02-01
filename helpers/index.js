@@ -1,11 +1,11 @@
 const { validationSchema } = require('./validation');
 const { generateError } = require('./generate-error');
 const { callController } = require('./call-controller');
-const errors = require('./errors');
+const responseErrors = require('./response-errors');
 
 module.exports = {
   validationSchema,
   generateError,
   callController,
-  errors,
+  responseErrors,
 };
