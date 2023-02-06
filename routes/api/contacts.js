@@ -2,7 +2,7 @@ const express = require('express');
 
 const { validateBody } = require('../../middlewares');
 const { validationSchema, callController } = require('../../helpers');
-const contactsCtrl = require('../../controllers/contacts-controllers');
+// const contactsCtrl = require('../../controllers/contacts-controllers');
 
 const ctrlContacts = require('../../controllers');
 
@@ -18,12 +18,12 @@ router.post(
   callController(ctrlContacts.add)
 );
 
-router.delete('/:contactId', callController(contactsCtrl.remove));
+router.delete('/:contactId', callController(ctrlContacts.remove));
 
 router.put(
   '/:contactId',
   validateBody(validationSchema.update),
-  contactsCtrl.update
+  ctrlContacts.update
 );
 
 module.exports = router;
