@@ -1,6 +1,5 @@
-const notFound = {
-  status: 404,
-  message: 'Not found',
+const responseErrors = {
+  notFound: { status: 404, message: 'Not found' },
 };
 
-module.exports = { notFound };
+module.exports = { responseErrors };
