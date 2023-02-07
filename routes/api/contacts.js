@@ -2,7 +2,6 @@ const express = require('express');
 
 const { validateBody } = require('../../middlewares');
 const { validationSchema, callController } = require('../../helpers');
-// const contactsCtrl = require('../../controllers/contacts-controllers');
 
 const ctrlContacts = require('../../controllers');
 
@@ -23,7 +22,13 @@ router.delete('/:contactId', callController(ctrlContacts.remove));
 router.put(
   '/:contactId',
   validateBody(validationSchema.update),
-  ctrlContacts.update
+  callController(ctrlContacts.update)
+);
+
+router.patch(
+  '/:contactId/favorite',
+  validateBody(validationSchema.statusUpdate),
+  callController(ctrlContacts.update)
 );
 
 module.exports = router;
