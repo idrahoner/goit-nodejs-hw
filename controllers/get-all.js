@@ -1,8 +1,10 @@
 const { ContactModel } = require('../models');
+const { prepareResponse } = require('../helpers');
 
 const getAll = async (req, res) => {
   const contacts = await ContactModel.find({});
-  res.status(200).json(contacts);
+  const preparedContacts = contacts.map((contact) => prepareResponse(contact));
+  res.status(200).json(preparedContacts);
 };
 
 module.exports = {

@@ -1,17 +1,22 @@
 const { ContactModel } = require('../models');
-const { validateId, generateError, responseErrors } = require('../helpers');
+const {
+  validateId,
+  generateError,
+  responseErrors,
+  prepareResponse,
+} = require('../helpers');
 
 const update = async (req, res) => {
   const { contactId } = req.params;
   validateId(contactId);
-  const updatedContact = await ContactModel.updateOne(
-    { _id: contactId },
-    req.body
+  const updatedContact = await ContactModel.findByIdAndUpdate(
+    contactId,
+    req.body,
+    { returnDocument: 'after', runValidators: true }
   );
-  if (!updatedContact.matchedCount)
-    throw generateError(responseErrors.notFound);
-  const contact = await ContactModel.findById(contactId);
-  res.status(200).json(contact);
+  if (!updatedContact) throw generateError(responseErrors.notFound);
+
+  res.status(200).json(prepareResponse(updatedContact));
 };
 
 module.exports = {
