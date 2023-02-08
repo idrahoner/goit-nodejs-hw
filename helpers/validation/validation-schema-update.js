@@ -22,6 +22,9 @@ const schemaUpdate = Joi.object({
     .messages({
       'string.pattern.base': 'phone number must be digits',
     }),
+  favorite: Joi.boolean().optional().messages({
+    'boolean.base': 'favorite must be a boolean',
+  }),
 })
   .min(1)
   .messages({
