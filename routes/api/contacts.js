@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { validateBody, callController } = require('../../middlewares');
-const { validationSchema } = require('../../helpers');
+const { contactsSchema } = require('../../helpers');
 
 const { contactsCtrl } = require('../../controllers');
 
@@ -13,7 +13,7 @@ router.get('/:contactId', callController(contactsCtrl.getById));
 
 router.post(
   '/',
-  validateBody(validationSchema.add),
+  validateBody(contactsSchema.add),
   callController(contactsCtrl.add)
 );
 
@@ -21,13 +21,13 @@ router.delete('/:contactId', callController(contactsCtrl.remove));
 
 router.put(
   '/:contactId',
-  validateBody(validationSchema.update),
+  validateBody(contactsSchema.update),
   callController(contactsCtrl.update)
 );
 
 router.patch(
   '/:contactId/favorite',
-  validateBody(validationSchema.statusUpdate),
+  validateBody(contactsSchema.updateStatus),
   callController(contactsCtrl.update)
 );
 
