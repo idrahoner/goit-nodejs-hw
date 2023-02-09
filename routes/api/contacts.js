@@ -1,7 +1,7 @@
 const express = require('express');
 
-const { validateBody } = require('../../middlewares');
-const { validationSchema, callController } = require('../../helpers');
+const { validateBody, callController } = require('../../middlewares');
+const { validationSchema } = require('../../helpers');
 
 const ctrlContacts = require('../../controllers');
 

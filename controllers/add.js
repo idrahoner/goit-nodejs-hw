@@ -1,15 +1,8 @@
-const { ContactModel } = require('../models');
-const { prepareResponse } = require('../helpers');
+const { contactsService } = require('../services');
 
 const add = async (req, res) => {
-  const { name, email, phone, favorite = false } = req.body;
-  const newContact = await ContactModel.create({
-    name,
-    email,
-    phone,
-    favorite,
-  });
-  res.status(201).json(prepareResponse(newContact));
+  const newContact = await contactsService.addItem(req.body);
+  res.status(201).json(newContact);
 };
 
 module.exports = {
