@@ -12,7 +12,11 @@ router.post(
   callController(usersCtrl.register)
 );
 
-router.post('/login', callController(usersCtrl.login));
+router.post(
+  '/login',
+  validateBody(usersSchema.login),
+  callController(usersCtrl.login)
+);
 
 router.post('/logout', callController(usersCtrl.logout));
 
