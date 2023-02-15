@@ -21,4 +21,6 @@ router.post(
 
 router.post('/logout', checkAuthUser, callController(usersCtrl.logout));
 
+router.get('/current', checkAuthUser, callController(usersCtrl.current));
+
 module.exports = router;
