@@ -10,7 +10,10 @@ const login = async (req, res) => {
   res.status(200).json(user);
 };
 
-const logout = async (req, res) => {};
+const logout = async (req, res) => {
+  await usersService.logout(req.user);
+  res.status(204).send();
+};
 
 module.exports = {
   register,

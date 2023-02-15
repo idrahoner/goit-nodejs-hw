@@ -15,11 +15,10 @@ router.post(
 
 router.post(
   '/login',
-  checkAuthUser,
   validateBody(usersSchema.login),
   callController(usersCtrl.login)
 );
 
-router.post('/logout', callController(usersCtrl.logout));
+router.post('/logout', checkAuthUser, callController(usersCtrl.logout));
 
 module.exports = router;

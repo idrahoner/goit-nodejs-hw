@@ -22,16 +22,29 @@ const register = async ({ email, password, subscription } = {}) => {
 
 const login = async ({ email, password } = {}) => {
   const user = await UserModel.findOne({ email });
+  if (!user) throw generateError(responseErrors.unauthorized);
+
   const validatePassword = await bcrypt.compare(password, user.password);
   if (!validatePassword) throw generateError(responseErrors.unauthorized);
+
   const token = jwt.sign({ userId: user._id.valueOf() }, SECRET_KEY);
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    user._id,
+    { token },
+    { returnDocument: 'after', runValidators: true }
+  );
   return {
-    token,
-    user: { email: user.email, subscription: user.subscription },
+    token: updatedUser.token,
+    user: { email: updatedUser.email, subscription: updatedUser.subscription },
   };
+};
+
+const logout = async (user) => {
+  await UserModel.findByIdAndUpdate(user._id, { token: null });
 };
 
 module.exports = {
   register,
   login,
+  logout,
 };
