@@ -6,25 +6,26 @@ const {
   responseErrors,
 } = require('../helpers');
 
-const getAllEntities = async () => {
-  const contacts = await ContactModel.find({});
+const getAllEntities = async (ownerId) => {
+  const contacts = await ContactModel.find({ owner: ownerId });
   return contacts.map((contact) => prepareResponse(contact));
 };
 
 const getItemById = async (id) => {
   validateId(id);
-  const contact = await ContactModel.findById(id);
+  const contact = await ContactModel.findOne({ _id: id });
   if (!contact) throw generateError(responseErrors.notFound);
   return prepareResponse(contact);
 };
 
-const addItem = async (body) => {
+const addItem = async (body, ownerId) => {
   const { name, email, phone, favorite = false } = body;
   const newContact = await ContactModel.create({
     name,
     email,
     phone,
     favorite,
+    owner: ownerId,
   });
   return prepareResponse(newContact);
 };

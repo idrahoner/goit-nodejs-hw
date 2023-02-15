@@ -7,12 +7,14 @@ const getById = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-  const contacts = await contactsService.getAllEntities();
+  const { _id: ownerId } = req.user;
+  const contacts = await contactsService.getAllEntities(ownerId);
   res.status(200).json(contacts);
 };
 
 const add = async (req, res) => {
-  const newContact = await contactsService.addItem(req.body);
+  const { _id: ownerId } = req.user;
+  const newContact = await contactsService.addItem(req.body, ownerId);
   res.status(201).json(newContact);
 };
 

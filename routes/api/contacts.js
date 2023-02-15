@@ -4,8 +4,11 @@ const { validateBody, callController } = require('../../middlewares');
 const { contactsSchema } = require('../../helpers');
 
 const { contactsCtrl } = require('../../controllers');
+const { checkAuthUser } = require('../../middlewares');
 
 const router = express.Router();
+
+router.use(checkAuthUser);
 
 router.get('/', callController(contactsCtrl.getAll));
 
