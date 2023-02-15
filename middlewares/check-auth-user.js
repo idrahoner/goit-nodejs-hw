@@ -19,7 +19,7 @@ const checkAuthUser = async (req, res, next) => {
     if (!user) throw generateError(responseErrors.unauthorized);
 
     req.user = user;
-    // req.token = token;
+    req.ownerId = userId;
 
     next();
   } catch (error) {

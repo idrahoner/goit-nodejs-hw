@@ -2,7 +2,7 @@ const { contactsSchema, usersSchema } = require('./validation');
 const { generateError } = require('./generate-error');
 const { responseErrors } = require('./response-errors');
 const { validateId } = require('./validate-id');
-const { prepareResponse } = require('./prepare-response');
+const { renameIdField } = require('./rename-id-field');
 
 module.exports = {
   contactsSchema,
@@ -10,5 +10,5 @@ module.exports = {
   generateError,
   responseErrors,
   validateId,
-  prepareResponse,
+  renameIdField,
 };
