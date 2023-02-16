@@ -3,6 +3,7 @@ const { generateError } = require('./generate-error');
 const { responseErrors } = require('./response-errors');
 const { validateId } = require('./validate-id');
 const { renameIdField } = require('./rename-id-field');
+const { calculatePagination } = require('./calculate-pagination');
 
 module.exports = {
   contactsSchema,
@@ -11,4 +12,5 @@ module.exports = {
   responseErrors,
   validateId,
   renameIdField,
+  calculatePagination,
 };

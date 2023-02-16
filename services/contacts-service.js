@@ -4,9 +4,9 @@ const {
   validateId,
   generateError,
   responseErrors,
+  calculatePagination,
 } = require('../helpers');
 
-// TODO refactor query to db and pagination
 const getAllEntities = async (
   owner,
   { page = 1, limit = 20, favorite = { $in: [true, false] } } = {}
@@ -14,7 +14,7 @@ const getAllEntities = async (
   const contacts = await ContactModel.find(
     { owner, favorite },
     { owner: 0, __v: 0 },
-    { skip: (Number(page) - 1) * Number(limit), limit: Number(limit) }
+    calculatePagination({ page, limit })
   );
   return contacts.map((contact) => renameIdField(contact));
 };
