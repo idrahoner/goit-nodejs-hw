@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { constants } = require('../helpers');
 
 const userSchema = mongoose.Schema({
   password: {
@@ -12,8 +13,8 @@ const userSchema = mongoose.Schema({
   },
   subscription: {
     type: String,
-    enum: ['starter', 'pro', 'business'],
-    default: 'starter',
+    enum: Object.values(constants.SUBSCRIPTION_PLANS),
+    default: constants.SUBSCRIPTION_PLANS.starter,
   },
   token: String,
 });

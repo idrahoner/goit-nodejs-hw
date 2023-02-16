@@ -5,6 +5,7 @@ const {
   generateError,
   responseErrors,
   calculatePagination,
+  constants,
 } = require('../helpers');
 
 const getAllEntities = async (
@@ -13,7 +14,7 @@ const getAllEntities = async (
 ) => {
   const contacts = await ContactModel.find(
     { owner, favorite },
-    { owner: 0, __v: 0 },
+    constants.DEFAULT_CONTACT_PROJECTION,
     calculatePagination({ page, limit })
   );
   return contacts.map((contact) => renameIdField(contact));
@@ -23,7 +24,7 @@ const getItemById = async (id, owner) => {
   validateId(id);
   const contact = await ContactModel.findOne(
     { _id: id, owner },
-    { owner: 0, __v: 0 }
+    constants.DEFAULT_CONTACT_PROJECTION
   );
   if (!contact) throw generateError(responseErrors.notFound);
   return renameIdField(contact);
@@ -68,8 +69,8 @@ const updateItemById = async (id, body, owner) => {
       favorite,
       owner,
     },
-    { returnDocument: 'after', runValidators: true }
-  ).select({ owner: 0, __v: 0 });
+    constants.DEFAULT_UPDATE_OPTIONS
+  ).select(constants.DEFAULT_CONTACT_PROJECTION);
   if (!updatedContact) throw generateError(responseErrors.notFound);
   return renameIdField(updatedContact);
 };

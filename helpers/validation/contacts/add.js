@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { errorMessages } = require('../messages');
-const { PHONE_PATTERN } = require('../constants');
+const { PHONE_PATTERN } = require('../../constants');
 
 // TODO hadle "object.base" error, current: "\"value\" must be of type object"
 const add = Joi.object({
@@ -34,7 +34,10 @@ const add = Joi.object({
     .messages({
       ...errorMessages.favoriteWrongType(),
     }),
-}).messages({ ...errorMessages.extraFieldsPresent() });
+}).messages({
+  ...errorMessages.extraFieldsPresent(),
+  ...errorMessages.isNotObject(),
+});
 
 module.exports = {
   add,

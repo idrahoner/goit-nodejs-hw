@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { UserModel } = require('../models');
-const { generateError, responseErrors } = require('../helpers');
+const { generateError, responseErrors, constants } = require('../helpers');
 
 const { SECRET_KEY } = process.env;
 
@@ -31,7 +31,7 @@ const login = async ({ email, password } = {}) => {
   const updatedUser = await UserModel.findByIdAndUpdate(
     user._id,
     { token },
-    { returnDocument: 'after', runValidators: true }
+    constants.DEFAULT_UPDATE_OPTIONS
   );
   return {
     token: updatedUser.token,
@@ -47,7 +47,7 @@ const updateUserStatus = async ({ subscription } = {}, userId) => {
   const updatedUser = await UserModel.findByIdAndUpdate(
     userId,
     { subscription },
-    { returnDocument: 'after', runValidators: true }
+    constants.DEFAULT_UPDATE_OPTIONS
   );
   return { email: updatedUser.email, subscription: updatedUser.subscription };
 };

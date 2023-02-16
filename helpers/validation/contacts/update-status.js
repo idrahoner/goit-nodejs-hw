@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { errorMessages } = require('../messages');
-const { PHONE_PATTERN } = require('../constants');
+const { PHONE_PATTERN } = require('../../constants');
 
 const updateStatus = Joi.object({
   name: Joi.string()
@@ -31,7 +31,10 @@ const updateStatus = Joi.object({
       ...errorMessages.requiredField('favorite'),
       ...errorMessages.favoriteWrongType(),
     }),
-}).messages({ ...errorMessages.extraFieldsPresent() });
+}).messages({
+  ...errorMessages.extraFieldsPresent(),
+  ...errorMessages.isNotObject(),
+});
 
 module.exports = {
   updateStatus,

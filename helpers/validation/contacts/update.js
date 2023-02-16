@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { errorMessages } = require('../messages');
-const { PHONE_PATTERN } = require('../constants');
+const { PHONE_PATTERN } = require('../../constants');
 
 const update = Joi.object({
   name: Joi.string()
@@ -35,6 +35,7 @@ const update = Joi.object({
   .messages({
     ...errorMessages.extraFieldsPresent(),
     ...errorMessages.missedFields(),
+    ...errorMessages.isNotObject(),
   });
 
 module.exports = {

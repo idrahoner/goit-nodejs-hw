@@ -28,6 +28,12 @@ const extraFieldsPresent = () => ({
 
 const missedFields = () => ({ 'object.min': 'missing fields' });
 
+const isNotObject = () => ({ 'object.base': 'body must be of type object' });
+
+const oneOfRequired = (array) => ({
+  'any.only': `subscription must be one of [${array.join(', ')}]`,
+});
+
 module.exports = {
   requiredField,
   minLength,
@@ -37,4 +43,6 @@ module.exports = {
   favoriteWrongType,
   extraFieldsPresent,
   missedFields,
+  isNotObject,
+  oneOfRequired,
 };
