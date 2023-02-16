@@ -6,8 +6,16 @@ const {
   responseErrors,
 } = require('../helpers');
 
-const getAllEntities = async (owner) => {
-  const contacts = await ContactModel.find({ owner }, { owner: 0, __v: 0 });
+const getAllEntities = async (
+  owner,
+  { page = 1, limit = 20, favorite } = {}
+) => {
+  if (!favorite) favorite = { $in: [true, false] };
+  const contacts = await ContactModel.find(
+    { owner, favorite },
+    { owner: 0, __v: 0 },
+    { skip: (Number(page) - 1) * Number(limit), limit: Number(limit) }
+  );
   return contacts.map((contact) => renameIdField(contact));
 };
 
@@ -21,8 +29,7 @@ const getItemById = async (id, owner) => {
   return renameIdField(contact);
 };
 
-const addItem = async (body, owner) => {
-  const { name, email, phone, favorite = false } = body;
+const addItem = async ({ name, email, phone, favorite }, owner) => {
   const newContact = await ContactModel.create({
     name,
     email,

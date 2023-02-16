@@ -1,14 +1,15 @@
 const { contactsService } = require('../services');
 
+const getAll = async (req, res) => {
+  // console.log('   requires query    ===>    ', req.query);
+  const contacts = await contactsService.getAllEntities(req.ownerId, req.query);
+  res.status(200).json(contacts);
+};
+
 const getById = async (req, res) => {
   const { contactId } = req.params;
   const contact = await contactsService.getItemById(contactId, req.ownerId);
   res.status(200).json(contact);
-};
-
-const getAll = async (req, res) => {
-  const contacts = await contactsService.getAllEntities(req.ownerId);
-  res.status(200).json(contacts);
 };
 
 const add = async (req, res) => {
@@ -33,8 +34,8 @@ const update = async (req, res) => {
 };
 
 module.exports = {
-  getById,
   getAll,
+  getById,
   add,
   remove,
   update,
