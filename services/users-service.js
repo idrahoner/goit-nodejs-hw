@@ -43,8 +43,18 @@ const logout = async (user) => {
   await UserModel.findByIdAndUpdate(user._id, { token: null });
 };
 
+const updateUserStatus = async ({ subscription } = {}, userId) => {
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    userId,
+    { subscription },
+    { returnDocument: 'after', runValidators: true }
+  );
+  return { email: updatedUser.email, subscription: updatedUser.subscription };
+};
+
 module.exports = {
   register,
   login,
   logout,
+  updateUserStatus,
 };

@@ -23,4 +23,11 @@ router.post('/logout', checkAuthUser, callController(usersCtrl.logout));
 
 router.get('/current', checkAuthUser, callController(usersCtrl.current));
 
+router.patch(
+  '/',
+  checkAuthUser,
+  validateBody(usersSchema.updateSubscription),
+  callController(usersCtrl.updateSubscription)
+);
+
 module.exports = router;

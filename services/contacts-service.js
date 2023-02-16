@@ -6,11 +6,11 @@ const {
   responseErrors,
 } = require('../helpers');
 
+// TODO refactor query to db and pagination
 const getAllEntities = async (
   owner,
-  { page = 1, limit = 20, favorite } = {}
+  { page = 1, limit = 20, favorite = { $in: [true, false] } } = {}
 ) => {
-  if (!favorite) favorite = { $in: [true, false] };
   const contacts = await ContactModel.find(
     { owner, favorite },
     { owner: 0, __v: 0 },

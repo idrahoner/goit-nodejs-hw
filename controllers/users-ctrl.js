@@ -20,9 +20,15 @@ const current = async (req, res) => {
   res.status(200).json({ email, subscription });
 };
 
+const updateSubscription = async (req, res) => {
+  const user = await usersService.updateUserStatus(req.body, req.ownerId);
+  res.status(200).json(user);
+};
+
 module.exports = {
   register,
   login,
   logout,
   current,
+  updateSubscription,
 };
