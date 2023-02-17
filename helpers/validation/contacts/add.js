@@ -2,7 +2,6 @@ const Joi = require('joi');
 const { errorMessages } = require('../messages');
 const { PHONE_PATTERN } = require('../../constants');
 
-// TODO hadle "object.base" error, current: "\"value\" must be of type object"
 const add = Joi.object({
   name: Joi.string()
     .min(3)

@@ -2,21 +2,23 @@ const jwt = require('jsonwebtoken');
 const { generateError, responseErrors } = require('../helpers');
 const { UserModel } = require('../models');
 
-const { SECRET_KEY } = process.env;
+const { JWT_SECRET_KEY } = process.env;
 
 const checkAuthUser = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
+    console.log('   Authorization:    ', authorization);
     if (!authorization) throw generateError(responseErrors.unauthorized);
 
-    const [type, token] = authorization.split(' ');
-    if (type !== 'Bearer' || !token)
+    const [tokenType, token] = authorization.split(' ');
+    if (tokenType !== 'Bearer' || !token)
       throw generateError(responseErrors.unauthorized);
 
-    const { userId } = jwt.verify(token, SECRET_KEY);
+    const { userId } = jwt.verify(token, JWT_SECRET_KEY);
 
     const user = await UserModel.findById(userId);
-    if (!user) throw generateError(responseErrors.unauthorized);
+    if (!user || user.token !== token)
+      throw generateError(responseErrors.unauthorized);
 
     req.user = user;
     req.ownerId = userId;

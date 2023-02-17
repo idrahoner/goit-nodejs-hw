@@ -3,15 +3,19 @@ const jwt = require('jsonwebtoken');
 const { UserModel } = require('../models');
 const { generateError, responseErrors, constants } = require('../helpers');
 
-const { SECRET_KEY } = process.env;
+const { JWT_SECRET_KEY } = process.env;
 
 const register = async ({ email, password, subscription } = {}) => {
+  const isEmailExisted = UserModel.findOne({ email });
+  if (isEmailExisted) throw generateError(responseErrors.emailUsed);
+
   const hashPassword = await bcrypt.hash(password, 10);
   const newUser = await UserModel.create({
     email,
     password: hashPassword,
     subscription,
   });
+
   return {
     user: {
       email: newUser.email,
@@ -24,10 +28,10 @@ const login = async ({ email, password } = {}) => {
   const user = await UserModel.findOne({ email });
   if (!user) throw generateError(responseErrors.unauthorized);
 
-  const validatePassword = await bcrypt.compare(password, user.password);
-  if (!validatePassword) throw generateError(responseErrors.unauthorized);
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) throw generateError(responseErrors.unauthorized);
 
-  const token = jwt.sign({ userId: user._id.valueOf() }, SECRET_KEY);
+  const token = jwt.sign({ userId: user._id.valueOf() }, JWT_SECRET_KEY);
   const updatedUser = await UserModel.findByIdAndUpdate(
     user._id,
     { token },
