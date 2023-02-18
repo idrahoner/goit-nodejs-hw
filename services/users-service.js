@@ -6,7 +6,7 @@ const { generateError, responseErrors, constants } = require('../helpers');
 const { JWT_SECRET_KEY } = process.env;
 
 const register = async ({ email, password, subscription } = {}) => {
-  const isEmailExisted = UserModel.findOne({ email });
+  const isEmailExisted = await UserModel.findOne({ email });
   if (isEmailExisted) throw generateError(responseErrors.emailUsed);
 
   const hashPassword = await bcrypt.hash(password, 10);

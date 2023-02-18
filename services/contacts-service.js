@@ -1,7 +1,6 @@
 const { ContactModel } = require('../models');
 const {
   renameIdField,
-  validateId,
   generateError,
   responseErrors,
   calculatePagination,
@@ -21,7 +20,6 @@ const getAllEntities = async (
 };
 
 const getItemById = async (id, owner) => {
-  validateId(id);
   const contact = await ContactModel.findOne(
     { _id: id, owner },
     constants.DEFAULT_CONTACT_PROJECTION
@@ -48,7 +46,6 @@ const addItem = async ({ name, email, phone, favorite }, owner) => {
 };
 
 const removeItemById = async (id, owner) => {
-  validateId(id);
   const contact = await ContactModel.findOneAndRemove({
     _id: id,
     owner,
@@ -58,7 +55,6 @@ const removeItemById = async (id, owner) => {
 };
 
 const updateItemById = async (id, body, owner) => {
-  validateId(id);
   const { name, email, phone, favorite } = body;
   const updatedContact = await ContactModel.findOneAndUpdate(
     { _id: id, owner },

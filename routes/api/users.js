@@ -3,7 +3,7 @@ const express = require('express');
 const { validateBody, callController } = require('../../middlewares');
 const { usersSchema } = require('../../helpers');
 const { usersCtrl } = require('../../controllers');
-const { checkAuthUser } = require('../../middlewares');
+const { authMiddleware } = require('../../middlewares');
 
 const router = express.Router();
 
@@ -19,13 +19,13 @@ router.post(
   callController(usersCtrl.login)
 );
 
-router.post('/logout', checkAuthUser, callController(usersCtrl.logout));
+router.post('/logout', authMiddleware, callController(usersCtrl.logout));
 
-router.get('/current', checkAuthUser, callController(usersCtrl.current));
+router.get('/current', authMiddleware, callController(usersCtrl.current));
 
 router.patch(
   '/',
-  checkAuthUser,
+  authMiddleware,
   validateBody(usersSchema.updateSubscription),
   callController(usersCtrl.updateSubscription)
 );

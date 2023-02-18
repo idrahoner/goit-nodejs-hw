@@ -4,10 +4,9 @@ const { UserModel } = require('../models');
 
 const { JWT_SECRET_KEY } = process.env;
 
-const checkAuthUser = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
-    console.log('   Authorization:    ', authorization);
     if (!authorization) throw generateError(responseErrors.unauthorized);
 
     const [tokenType, token] = authorization.split(' ');
@@ -21,7 +20,6 @@ const checkAuthUser = async (req, res, next) => {
       throw generateError(responseErrors.unauthorized);
 
     req.user = user;
-    req.ownerId = userId;
 
     next();
   } catch (error) {
@@ -30,5 +28,5 @@ const checkAuthUser = async (req, res, next) => {
 };
 
 module.exports = {
-  checkAuthUser,
+  authMiddleware,
 };

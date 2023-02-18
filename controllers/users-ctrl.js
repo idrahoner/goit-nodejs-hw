@@ -21,7 +21,7 @@ const current = async (req, res) => {
 };
 
 const updateSubscription = async (req, res) => {
-  const user = await usersService.updateUserStatus(req.body, req.ownerId);
+  const user = await usersService.updateUserStatus(req.body, req.user._id);
   res.status(200).json(user);
 };
 
