@@ -1,15 +1,17 @@
-const { validationSchema } = require('./validation');
+const contactsSchema = require('./validation/contacts');
+const usersSchema = require('./validation/users');
 const { generateError } = require('./generate-error');
-const { callController } = require('./call-controller');
 const { responseErrors } = require('./response-errors');
-const { validateId } = require('./validate-id');
-const { prepareResponse } = require('./prepare-response');
+const { renameIdField } = require('./rename-id-field');
+const { calculatePagination } = require('./calculate-pagination');
+const constants = require('./constants');
 
 module.exports = {
-  validationSchema,
+  contactsSchema,
+  usersSchema,
   generateError,
-  callController,
   responseErrors,
-  validateId,
-  prepareResponse,
+  renameIdField,
+  calculatePagination,
+  constants,
 };
