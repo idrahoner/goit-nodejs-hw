@@ -3,7 +3,7 @@ const express = require('express');
 const { validateBody, callController } = require('../../middlewares');
 const { usersSchema } = require('../../helpers');
 const { usersCtrl } = require('../../controllers');
-const { authMiddleware } = require('../../middlewares');
+const { authMiddleware, uploadAvatar } = require('../../middlewares');
 
 const router = express.Router();
 
@@ -28,6 +28,13 @@ router.patch(
   authMiddleware,
   validateBody(usersSchema.updateSubscription),
   callController(usersCtrl.updateSubscription)
+);
+
+router.patch(
+  '/avatars',
+  authMiddleware,
+  uploadAvatar,
+  callController(usersCtrl.updateAvatar)
 );
 
 module.exports = router;
