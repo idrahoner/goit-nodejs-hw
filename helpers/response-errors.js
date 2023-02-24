@@ -5,6 +5,11 @@ const responseErrors = {
     status: 409,
     message: 'Email in use',
   },
+  notImage: { status: 400, message: 'The file must be an image' },
+  avatarSizeTooLarge: {
+    status: 400,
+    message: 'The file size should not exceed 2MB',
+  },
 };
 
 module.exports = { responseErrors };

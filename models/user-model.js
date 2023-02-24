@@ -16,6 +16,7 @@ const userSchema = mongoose.Schema({
     enum: Object.values(constants.SUBSCRIPTION_PLANS),
     default: constants.SUBSCRIPTION_PLANS.starter,
   },
+  avatarURL: String,
   token: String,
 });
 

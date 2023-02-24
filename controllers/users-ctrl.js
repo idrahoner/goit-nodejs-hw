@@ -25,10 +25,16 @@ const updateSubscription = async (req, res) => {
   res.status(200).json(user);
 };
 
+const updateAvatar = async (req, res) => {
+  const avatarURL = await usersService.updateUserAvatar(req.file, req.user._id);
+  return res.status(200).json(avatarURL);
+};
+
 module.exports = {
   register,
   login,
   logout,
   current,
   updateSubscription,
+  updateAvatar,
 };

@@ -1,7 +1,14 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { UserModel } = require('../models');
-const { generateError, responseErrors, constants } = require('../helpers');
+const {
+  generateError,
+  responseErrors,
+  constants,
+  saveAvatarToStorage,
+} = require('../helpers');
+
+const gravatar = require('gravatar');
 
 const { JWT_SECRET_KEY } = process.env;
 
@@ -14,6 +21,7 @@ const register = async ({ email, password, subscription } = {}) => {
     email,
     password: hashPassword,
     subscription,
+    avatarURL: gravatar.url(email),
   });
 
   return {
@@ -56,9 +64,20 @@ const updateUserStatus = async ({ subscription } = {}, userId) => {
   return { email: updatedUser.email, subscription: updatedUser.subscription };
 };
 
+const updateUserAvatar = async (file, userId) => {
+  await saveAvatarToStorage(file);
+  const { avatarURL } = await UserModel.findByIdAndUpdate(
+    userId,
+    { avatarURL: `/avatars/${file.filename}` },
+    constants.DEFAULT_UPDATE_OPTIONS
+  );
+  return { avatarURL };
+};
+
 module.exports = {
   register,
   login,
   logout,
   updateUserStatus,
+  updateUserAvatar,
 };
