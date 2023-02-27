@@ -5,6 +5,17 @@ const register = async (req, res) => {
   res.status(201).json(user);
 };
 
+const verify = async (req, res) => {
+  const { verificationToken } = req.params;
+  const status = await usersService.verify(verificationToken);
+  res.status(200).json(status);
+};
+
+const reVerify = async (req, res) => {
+  const status = await usersService.reVerify(req.body.email);
+  res.status(200).json(status);
+};
+
 const login = async (req, res) => {
   const user = await usersService.login(req.body);
   res.status(200).json(user);
@@ -32,6 +43,8 @@ const updateAvatar = async (req, res) => {
 
 module.exports = {
   register,
+  verify,
+  reVerify,
   login,
   logout,
   current,

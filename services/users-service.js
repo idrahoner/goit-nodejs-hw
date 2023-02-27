@@ -1,14 +1,15 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
+const { nanoid } = require('nanoid');
 const { UserModel } = require('../models');
 const {
   generateError,
   responseErrors,
   constants,
   saveAvatarToStorage,
+  sendEmailToVerify,
 } = require('../helpers');
-
-const gravatar = require('gravatar');
 
 const { JWT_SECRET_KEY } = process.env;
 
@@ -17,12 +18,16 @@ const register = async ({ email, password, subscription } = {}) => {
   if (isEmailExisted) throw generateError(responseErrors.emailUsed);
 
   const hashPassword = await bcrypt.hash(password, 10);
+  const verificationToken = nanoid();
   const newUser = await UserModel.create({
     email,
     password: hashPassword,
     subscription,
     avatarURL: gravatar.url(email),
+    verificationToken,
   });
+
+  await sendEmailToVerify(email, verificationToken);
 
   return {
     user: {
@@ -32,9 +37,35 @@ const register = async ({ email, password, subscription } = {}) => {
   };
 };
 
+const verify = async (verificationToken) => {
+  const user = await UserModel.findOne({ verificationToken });
+  if (!user) throw generateError(responseErrors.notFound);
+  await UserModel.findByIdAndUpdate(user._id, {
+    verificationToken: null,
+    verify: true,
+  });
+
+  return { message: 'Verification successful' };
+};
+
+const reVerify = async (email) => {
+  const user = await UserModel.findOne({ email });
+
+  if (!user) throw generateError(responseErrors.notFound);
+  if (user.verify) throw generateError(responseErrors.verified);
+
+  await sendEmailToVerify(email, user.verificationToken);
+
+  return {
+    message: 'Verification email sent',
+  };
+};
+
 const login = async ({ email, password } = {}) => {
   const user = await UserModel.findOne({ email });
+
   if (!user) throw generateError(responseErrors.unauthorized);
+  if (!user.verify) throw generateError(responseErrors.verifyEmail);
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) throw generateError(responseErrors.unauthorized);
@@ -76,6 +107,8 @@ const updateUserAvatar = async (file, userId) => {
 
 module.exports = {
   register,
+  verify,
+  reVerify,
   login,
   logout,
   updateUserStatus,

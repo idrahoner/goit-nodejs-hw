@@ -10,6 +10,8 @@ const responseErrors = {
     status: 400,
     message: 'The file size should not exceed 2MB',
   },
+  verifyEmail: { status: 400, message: 'Verify your email' },
+  verified: { status: 400, message: 'Verification has already been passed' },
 };
 
 module.exports = { responseErrors };
