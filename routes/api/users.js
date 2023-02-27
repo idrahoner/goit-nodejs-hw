@@ -13,6 +13,14 @@ router.post(
   callController(usersCtrl.register)
 );
 
+router.get('/verify/:verificationToken', callController(usersCtrl.verify));
+
+router.post(
+  '/verify',
+  validateBody(usersSchema.reVerify),
+  callController(usersCtrl.reVerify)
+);
+
 router.post(
   '/login',
   validateBody(usersSchema.login),

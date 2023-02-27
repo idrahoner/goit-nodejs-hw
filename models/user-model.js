@@ -16,6 +16,14 @@ const userSchema = mongoose.Schema({
     enum: Object.values(constants.SUBSCRIPTION_PLANS),
     default: constants.SUBSCRIPTION_PLANS.starter,
   },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    required: [true, 'Verify token is required'],
+  },
   avatarURL: String,
   token: String,
 });
